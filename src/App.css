@@ -4,14 +4,23 @@
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  height: 40px;
+  vertical-align: middle;
+}
+
+.Family-Button {
+  height: 20px;
+  float: right;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
+  background-color: #099;
+  height: 50px;
+  padding: 10px;
   color: white;
+  vertical-align: top;
+  font-size: 25px;
+    
 }
 
 .App-intro {

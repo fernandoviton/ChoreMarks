@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+import familyImg from './family.png';
 import './App.css';
+import Nav from 'react-bootstrap/lib/Nav';
+import Navbar from 'react-bootstrap/lib/Navbar';
+import NavItem from 'react-bootstrap/lib/NavItem';
+import NavDropdown from 'react-bootstrap/lib/NavDropdown';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
 
+/*
 
 class ChoreMark extends Component {
   constructor() {
@@ -11,13 +18,6 @@ class ChoreMark extends Component {
     }
   }
 
-  /*incrementChore() {
-    //alert('increment');
-    this.setState({
-      numberOfChores: 8,
-    }); 
-    alert('increment: ' + this.state.numberOfChores);
-  }*/
   
   render() {
     //alert('about to render the chore mark: ' + this.props.value);
@@ -33,6 +33,7 @@ class ChoreMark extends Component {
   }
 
 }
+*/
 
 class ChoreEntry {
   constructor(num, sum) {
@@ -96,6 +97,31 @@ class ChoreList extends Component {
 
 }
 
+class ChoreNavBar extends Component {
+  render() {
+    return (
+      <Navbar>
+    <Navbar.Header>
+      <Navbar.Brand>
+        <a href="#">Check off Chores</a>
+      </Navbar.Brand>
+    </Navbar.Header>
+    <Nav>
+      <NavItem eventKey={1} href="#">Link</NavItem>
+      <NavItem eventKey={2} href="#">Link</NavItem>
+      <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+        <MenuItem eventKey={3.1}>Action</MenuItem>
+        <MenuItem eventKey={3.2}>Another action</MenuItem>
+        <MenuItem eventKey={3.3}>Something else here</MenuItem>
+        <MenuItem divider />
+        <MenuItem eventKey={3.3}>Separated link</MenuItem>
+      </NavDropdown>
+    </Nav>
+  </Navbar>
+    );
+
+  }
+} 
 
 
 class App extends Component {
@@ -113,38 +139,16 @@ class App extends Component {
     }
   }
 
-  ENRIQUE() { return 1; }
-  NATALIE() { return 2; }
-
-  increaseChoreMarks(i) {
-    if (i == this.ENRIQUE()) {
-      //this.state.EnriqueChoreMark.incrementChore();
-      /*var updateEnrique = this.state.EnriqueChoreMark.slice();
-      updateEnrique.setNumber(.number() + 1);
-      alert('about to update:' + updateEnrique.number());*/
-      this.setState({
-        dtnum: new ChoreEntry(this.state.dtnum.getValue()+1),
-        EnriqueChoreMark: this.state.EnriqueChoreMark + 1,
-        EnriqueToday: this.state.EnriqueToday + 1,
-      });
-    }
-    else if (i == this.NATALIE()) {
-      this.setState({
-        NatalieToday: this.state.NatalieToday + 1
-      });
-    }
-  }
 
   AddNewPerson() {
-    const listOfPeople = this.state.listOfPeople;
-    const current = listOfPeople[listOfPeople.length-1];
     var inputElement = document.getElementById('personID');
     if (inputElement != null) {
       var personName = inputElement.value;
-      if (personName == "") {
+      if (personName === "") {
         alert('Please enter the name of the new person');
       }
       else {
+        const listOfPeople = this.state.listOfPeople;
         this.setState({
           listOfPeople: listOfPeople.concat([{
             fullName: personName
@@ -154,14 +158,27 @@ class App extends Component {
     }
   }
 
+  renderNavBar() {
+
+  }
+
+//          <input type="submit" className="Family-Button" src={familyImg}> </input>
 
   render() {
     return (
       <div className="App">
+
+        <ChoreNavBar/>
+
         <div className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          Check off Chores
+          <button type="submit">
+            <img src={familyImg} className="Family-Button" alt="Add Person"/>
+          </button>
         </div>
+
+
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
