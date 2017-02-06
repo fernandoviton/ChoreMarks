@@ -95,16 +95,16 @@ class ChoreList extends Component {
 
 }
 
-class Home extends Component {
 
+class App extends Component {
+  
   constructor() {
     super();
     this.state = {
+      comment: "this is my comment",
       listOfPeople: [{fullName: "First Person"}], //chorelistItem: new ChoreList()}],
-      dtnum: new ChoreEntry(22, 22), 
     }
   }
-
 
   AddNewPerson() {
     var inputElement = document.getElementById('personID');
@@ -124,35 +124,41 @@ class Home extends Component {
     }
   }
 
-/*
-  renderOldHeader() {
+  renderAddNewPerson() {
     return (
-       <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          Check off Chores
-          <button type="submit">
-            <img src={familyImg} className="Family-Button" alt="Add Person"/>
-          </button>
-        </div>
-
-    )
-  }
-*/
-
-  render() {
-    return (
-      <div className="Home">
-
-        <div className="AddPerson">
+            <div className="AddPerson">
           <p>
-            <input type="text" id="personID" name="personName" /> <br/>
+            <input type="text" id="personIDOLD" name="personName" /> <br/>
             <Button bsStyle="primary" name="personBtn" className="personButton" onClick={() => this.AddNewPerson() }>
             Add New Person
             </Button>
           </p>
         </div>
+    );
 
-        {this.state.listOfPeople.map(
+  }
+
+  renderAddPersonPage() {
+    return (
+      <div className="AddPerson">
+          <p>
+            <input type="text" id="personID" name="personName" /> <br/>
+            <Button bsStyle="primary" name="personBtn" className="personButton" onClick={() => this.AddNewPerson() }>
+            Add New Person OH YEA
+            </Button>
+          </p>
+        </div>
+    );
+  }
+
+  renderListOfPeoplePage() {
+    var listOfPeople = this.state.listOfPeople;
+    if (listOfPeople == null) {
+      return null;
+    }
+    return (
+      <div className="Home">
+        {listOfPeople.map(
           function(person, index) {
             return <ChoreList value={person.fullName} key={index}> </ChoreList>;
             //return <button key={index}> {name} Button </button>;
@@ -162,19 +168,23 @@ class Home extends Component {
     );
   }
 
-}
 
 
-class App extends Component {
-  
   renderRouter() {
-      return (
+
+    const Container = (props) => <div>
+        <ChoreNavBar />
+        {props.children}
+      </div>
+
+    return (
         <div>
-        <ChoreNavBar/>
       <Router history={hashHistory}>
-        <Route path='/' component={Home} />
-        <Route path='/addPerson' component={AddPerson} />
-        <Route path='/home' component={Home} />
+      <Route component={Container}>
+        <Route path='/' component={() => this.renderListOfPeoplePage()} />
+        <Route path='/home' component={() => this.renderListOfPeoplePage()} />
+        <Route path='/addPerson' component={() => this.renderAddPersonPage()} />
+      </Route>
       </Router>
       </div>
       );
