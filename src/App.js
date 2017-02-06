@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import familyImg from './family.png';
+import { Router, Route, hashHistory } from 'react-router';
+//import logo from './logo.svg';
+//import familyImg from './family.png';
 import './App.css';
-import Nav from 'react-bootstrap/lib/Nav';
-import Navbar from 'react-bootstrap/lib/Navbar';
-import NavItem from 'react-bootstrap/lib/NavItem';
-import NavDropdown from 'react-bootstrap/lib/NavDropdown';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
-
+import Button from 'react-bootstrap/lib/Button';
+import ChoreNavBar from './ChoreNavBar';
+import AddPerson from './addperson';
 /*
 
 class ChoreMark extends Component {
@@ -84,9 +82,9 @@ class ChoreList extends Component {
     //alert('render function for ChoreList');
     return (
       <div className="App">
-        <button className="ChoreMarkButton" onClick={() => this.addChore(5)}>
+        <Button bsStyle="primary" className="ChoreMarkButton" onClick={() => this.addChore(5)}>
           Add Chore for {this.props.value}
-        </button>
+        </Button>
         <div className="ShowChores">
           {this.renderChoreMarks()}
         </div>
@@ -97,48 +95,16 @@ class ChoreList extends Component {
 
 }
 
-class ChoreNavBar extends Component {
-  render() {
-    return (
-      <Navbar>
-    <Navbar.Header>
-      <Navbar.Brand>
-        <a href="#">Check off Chores</a>
-      </Navbar.Brand>
-    </Navbar.Header>
-    <Nav>
-      <NavItem eventKey={1} href="#">Link</NavItem>
-      <NavItem eventKey={2} href="#">Link</NavItem>
-      <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
-        <MenuItem eventKey={3.1}>Action</MenuItem>
-        <MenuItem eventKey={3.2}>Another action</MenuItem>
-        <MenuItem eventKey={3.3}>Something else here</MenuItem>
-        <MenuItem divider />
-        <MenuItem eventKey={3.3}>Separated link</MenuItem>
-      </NavDropdown>
-    </Nav>
-  </Navbar>
-    );
-
-  }
-} 
-
 
 class App extends Component {
-
+  
   constructor() {
     super();
     this.state = {
+      comment: "this is my comment",
       listOfPeople: [{fullName: "First Person"}], //chorelistItem: new ChoreList()}],
-      EnriqueChoreMark: 1000,
-      dtnum: new ChoreEntry(22, 22), 
-      EnriqueToday: 0,
-      EnriqueBeforeToday: 50,
-      NatalieToday: 0,
-      NatalieBeforeToday: 50,
     }
   }
-
 
   AddNewPerson() {
     var inputElement = document.getElementById('personID');
@@ -158,53 +124,77 @@ class App extends Component {
     }
   }
 
-  renderNavBar() {
+  renderAddNewPerson() {
+    return (
+            <div className="AddPerson">
+          <p>
+            <input type="text" id="personIDOLD" name="personName" /> <br/>
+            <Button bsStyle="primary" name="personBtn" className="personButton" onClick={() => this.AddNewPerson() }>
+            Add New Person
+            </Button>
+          </p>
+        </div>
+    );
 
   }
 
-//          <input type="submit" className="Family-Button" src={familyImg}> </input>
-
-  render() {
+  renderAddPersonPage() {
     return (
-      <div className="App">
-
-        <ChoreNavBar/>
-
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          Check off Chores
-          <button type="submit">
-            <img src={familyImg} className="Family-Button" alt="Add Person"/>
-          </button>
+      <div className="AddPerson">
+          <p>
+            <input type="text" id="personID" name="personName" /> <br/>
+            <Button bsStyle="primary" name="personBtn" className="personButton" onClick={() => this.AddNewPerson() }>
+            Add New Person OH YEA
+            </Button>
+          </p>
         </div>
+    );
+  }
 
-
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-
-
-
-        <div className="AddPerson">
-        <p>
-          <input type="text" id="personID" name="personName" /> <br/>
-          <button name="personBtn" className="personButton" onClick={() => this.AddNewPerson() }>
-          Add New Person
-          </button>
-        </p>
-        </div>
-
-
-        {this.state.listOfPeople.map(
+  renderListOfPeoplePage() {
+    var listOfPeople = this.state.listOfPeople;
+    if (listOfPeople == null) {
+      return null;
+    }
+    return (
+      <div className="Home">
+        {listOfPeople.map(
           function(person, index) {
             return <ChoreList value={person.fullName} key={index}> </ChoreList>;
             //return <button key={index}> {name} Button </button>;
           })
         }
-
       </div>
     );
   }
+
+
+
+  renderRouter() {
+
+    const Container = (props) => <div>
+        <ChoreNavBar />
+        {props.children}
+      </div>
+
+    return (
+        <div>
+      <Router history={hashHistory}>
+      <Route component={Container}>
+        <Route path='/' component={() => this.renderListOfPeoplePage()} />
+        <Route path='/home' component={() => this.renderListOfPeoplePage()} />
+        <Route path='/addPerson' component={() => this.renderAddPersonPage()} />
+      </Route>
+      </Router>
+      </div>
+      );
+  }
+
+
+  render() {
+    return (<div className="App"> {this.renderRouter()} </div>);
+  }
 }
+
 
 export default App;
