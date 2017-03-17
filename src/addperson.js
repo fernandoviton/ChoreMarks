@@ -29,7 +29,6 @@ class AddPerson extends Component {
       }
     }
   }
-
 }
 
 

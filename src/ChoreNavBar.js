@@ -16,8 +16,9 @@ class ChoreNavBar extends Component {
         </Navbar.Brand>
       </Navbar.Header>
       <Nav>
-        <NavItem eventKey={1} href="#addPerson">Add Person</NavItem>
-        <NavItem eventKey={2} href="#home">Summary</NavItem>
+        <NavItem eventKey={1} href="addPerson">Add Person</NavItem>
+        <NavItem eventKey={2} href="home">Home</NavItem>
+        <NavItem eventKey={2} href="members">Members</NavItem>
         <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
           <MenuItem eventKey={3.1}>Action</MenuItem>
           <MenuItem eventKey={3.2}>Another action</MenuItem>
