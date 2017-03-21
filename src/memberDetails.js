@@ -2,26 +2,93 @@ import React, { Component } from 'react';
 import Button from 'react-bootstrap/lib/Button';
 import Table from 'react-bootstrap/lib/Table';
 import { browserHistory } from 'react-router';
+import { ChoreDetailsDataAccess } from './dataMembers'
 
 class MemberDetails extends Component {
 	constructor() {
 		super();
-		var name = "";
+		var paramValue = "";
+		var memberGuid = null;
 		var searchString = browserHistory.getCurrentLocation().search;
-		for (var i=0; i<searchString.length; i++) {
+		var paramName = "";
+		for (var i=1; i<searchString.length; i++) {
 			if (searchString[i] === '=') {
-				name = searchString.substring(i+1, searchString.length);
-				break;
+				paramValue = searchString.substring(i+1, searchString.length);
+				if (paramName === 'memberGuid') {
+					memberGuid = paramValue;
+					break;
+				}
+				else {
+					for (var j=i; j<searchString.length; j++) {
+						if (searchString[j] === '&') {
+							i = j;
+							break;
+						}
+					}
+					paramValue = "";
+					paramName = "";
+				}
+			} else if (searchString[i] !== '&') {
+				paramName += searchString[i];
 			}
 		}
 		this.state = {
-			name: name,
+			memberGuid: memberGuid,
+			memberName: "",
 			chores: [],
+			choresDataAccess: null
 		}
 	}
 
-	
+	componentDidMount() {
+		var choreDataAccess = new ChoreDetailsDataAccess("ChoresTable3", this.state.memberGuid, this.dataAccessRefreshCallback.bind(this));
+		this.setState({choresDataAccess: choreDataAccess});
 
+		choreDataAccess.LoadSingleMember(this.state.memberGuid, function(memberName) {
+			this.setState({memberName: memberName});
+		}.bind(this));
+	}
+
+	dataAccessRefreshCallback() {
+		this.GetAllChores();
+	}
+
+
+
+	GetAllChores() {
+		var tableData = this.state.choresDataAccess.GetTableData();
+		this.setState({
+			chores: tableData,
+		});
+	}
+
+	addChore() {
+		console.log('in addChore');
+		var valueElement = document.getElementById('valueID');
+		if (valueElement == null) return;
+
+		var value = valueElement.value;
+		if (value <= 0) {
+			alert('Please enter a positive value for the number of chores');
+			return;
+		}
+
+		var d = new Date();
+		console.log(d);
+		var date = d.toLocaleDateString() + " " + d.toLocaleTimeString();
+		console.log(date); 
+		
+		var description = "";
+		var descriptionElement = document.getElementById('descriptionID');
+		if (descriptionElement != null) {
+			description = descriptionElement.value;
+		}
+		console.log("value=" + value + " description=" + description + " date=" + date);
+
+		this.state.choresDataAccess.AddNewChore(this.state.memberGuid, date, value, description);
+	}
+
+/*
 	addChore() {
 		var valueElement = document.getElementById('valueID');
 		if (valueElement != null) {
@@ -49,6 +116,7 @@ class MemberDetails extends Component {
 			});
 		}
 	}
+	*/
 
 	renderChores() {
 		return <Table striped bordered condensed hover>
@@ -71,15 +139,20 @@ class MemberDetails extends Component {
 		</Table>
 	}
 
+	CreateTable() {
+		this.state.choresDataAccess.CreateChoresTable();
+	}
+
 	render() {
 		console.log("in render");
 
 		return <div className="MemberInfo">
-				<h1>Chores for {this.state.name}</h1>
+				<h1>Chores for {this.state.memberName}</h1>
+				<Button bsStyle="primary" onClick={() => this.CreateTable()}>CreateTable</Button> 
 				Value: <input type="number" id="valueID" name="valueName" />
 				Description: <input type="text" id="descriptionID" name="descriptionName" />
 				<Button bsStyle="primary" className="AddChore" onClick={() => this.addChore()}>
-					Edit
+					Add New Chore
 				</Button>
 				{this.renderChores()}
 			</div>;
